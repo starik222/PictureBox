@@ -70,6 +70,8 @@
             this.button4 = new System.Windows.Forms.Button();
             this.folderBrowserDialog3 = new System.Windows.Forms.FolderBrowserDialog();
             this.label15 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pBDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.archiveBindingSource)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -235,6 +237,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.textBox16);
             this.groupBox1.Controls.Add(this.progressBar1);
             this.groupBox1.Controls.Add(this.label14);
@@ -315,6 +318,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.textBox15);
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.progressBar2);
@@ -412,7 +416,27 @@
             this.label15.TabIndex = 17;
             this.label15.Text = "Текущее полключение: ";
             // 
-            // Form1
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.Transparent;
+            this.label5.Location = new System.Drawing.Point(128, 154);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(21, 13);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "0%";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.Transparent;
+            this.label6.Location = new System.Drawing.Point(131, 154);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(21, 13);
+            this.label6.TabIndex = 19;
+            this.label6.Text = "0%";
+            // 
+            // Form_ws
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -430,7 +454,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.textBox4);
-            this.Name = "Form1";
+            this.Name = "Form_ws";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -488,6 +512,8 @@
         private System.Windows.Forms.TextBox textBox15;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }
 

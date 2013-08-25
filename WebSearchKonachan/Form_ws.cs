@@ -358,6 +358,8 @@ namespace WebSearchKonachan
                     string substr = "";
                     string sub_temp = "";
                     WebClient wb = new WebClient();
+                    wb.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                    wb.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
                     DataRow[] dr;
                     string file_save = "";
                     string sel = "";
@@ -384,15 +386,22 @@ namespace WebSearchKonachan
                                 
                                     if (!File.Exists(path + "\\" + file_save))
                                     {
-                                    
+                                    restartD:   
+                                        int time = 0;
                                         downloaded = false;
-                                        wb.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                                        wb.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
                                    //     wb.DownloadFile(spisok_strok[i], path + "\\" + file_save);
                                         wb.DownloadFileAsync(new Uri(spisok_strok[i]), path + "\\" + file_save);
                                         while (!downloaded)
                                         {
                                             Thread.Sleep(300);
+                                            time++;
+                                            if (time > 1000)
+                                            {
+                                                wb.CancelAsync();
+                                                File.Delete(path + "\\" + file_save);
+                                                ErrMess(Convert.ToString(kk) + ":" + "Время ожидания истекло, перезапуск загрузки файла.");
+                                                goto restartD;
+                                            }
                                         }
                                         AddTextToList(file_save);
                                     }
@@ -555,6 +564,34 @@ namespace WebSearchKonachan
                 this.textBox13.Text = text;
             }
         }
+
+
+        private void lab6(string text)
+        {
+            if (this.label6.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(lab6);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                this.label6.Text = text;
+            }
+        }
+        private void lab5(string text)
+        {
+            if (this.label5.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(lab5);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                this.label5.Text = text;
+            }
+        }
+
+
         private void Progress_1(int chisl)
         {
             if (this.progressBar1.InvokeRequired)
@@ -783,6 +820,8 @@ namespace WebSearchKonachan
                     string substr = "";
                     string sub_temp = "";
                     WebClient wb = new WebClient();
+                    wb.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged_p2);
+                    wb.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed_p2);
                     DataRow[] dr;
                     string file_save = "";
                     string sel = "";
@@ -806,14 +845,22 @@ namespace WebSearchKonachan
                                 {
                                     if (!File.Exists(path_p2 + "\\" + file_save))
                                     {
+                                    restartD:
+                                        int time = 0;
                                         downloaded_p2 = false;
-                                        wb.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged_p2);
-                                        wb.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed_p2);
                                         //     wb.DownloadFile(spisok_strok[i], path + "\\" + file_save);
                                         wb.DownloadFileAsync(new Uri(spisok_strok[i]), path_p2 + "\\" + file_save);
                                         while (!downloaded_p2)
                                         {
                                             Thread.Sleep(300);
+                                            time++;
+                                            if (time > 1000)
+                                            {
+                                                wb.CancelAsync();
+                                                File.Delete(path_p2 + "\\" + file_save);
+                                                ErrMess(Convert.ToString(kk) + ":" + "Время ожидания истекло, перезапуск загрузки файла.");
+                                                goto restartD;
+                                            }
                                         }
                                         AddTextToList(file_save);
                                     }
@@ -825,7 +872,7 @@ namespace WebSearchKonachan
                                 }
                                 catch (Exception ex)
                                 {
-                                    MessageBox.Show(ex.Message);
+                                    ErrMess(Convert.ToString(kk) + ":" + ex.Message);
                                 }
                             }
                             else
@@ -878,6 +925,7 @@ namespace WebSearchKonachan
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
+            lab5(e.ProgressPercentage.ToString() + "%");
             Progress_1(e.ProgressPercentage);
         }
 
@@ -887,6 +935,7 @@ namespace WebSearchKonachan
         }
         private void ProgressChanged_p2(object sender, DownloadProgressChangedEventArgs e)
         {
+            lab6(e.ProgressPercentage.ToString() + "%");
             Progress_1_p2(e.ProgressPercentage);
         }
 
