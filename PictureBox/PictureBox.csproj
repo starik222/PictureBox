@@ -107,6 +107,12 @@
     <Compile Include="Form_connect.Designer.cs">
       <DependentUpon>Form_connect.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form_options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_options.Designer.cs">
+      <DependentUpon>Form_options.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form_prev.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +144,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_connect.resx">
       <DependentUpon>Form_connect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_options.resx">
+      <DependentUpon>Form_options.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form_prev.resx">
       <DependentUpon>Form_prev.cs</DependentUpon>

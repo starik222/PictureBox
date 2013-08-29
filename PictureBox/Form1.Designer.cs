@@ -81,13 +81,13 @@
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкаСоединенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.очисткаБазыДанныхToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.общиеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.списокТеговToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.предпросмотрToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.webSearchKonachanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
-            this.общиеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pBDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.archiveBindingSource)).BeginInit();
             this.contextMenuStrip2.SuspendLayout();
@@ -556,6 +556,13 @@
             this.очисткаБазыДанныхToolStripMenuItem.Text = "Очистка базы данных";
             this.очисткаБазыДанныхToolStripMenuItem.Click += new System.EventHandler(this.очисткаБазыДанныхToolStripMenuItem_Click);
             // 
+            // общиеToolStripMenuItem
+            // 
+            this.общиеToolStripMenuItem.Name = "общиеToolStripMenuItem";
+            this.общиеToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.общиеToolStripMenuItem.Text = "Общие";
+            this.общиеToolStripMenuItem.Click += new System.EventHandler(this.общиеToolStripMenuItem_Click);
+            // 
             // списокТеговToolStripMenuItem
             // 
             this.списокТеговToolStripMenuItem.Name = "списокТеговToolStripMenuItem";
@@ -608,12 +615,6 @@
             this.button5.Text = "Desktop";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // общиеToolStripMenuItem
-            // 
-            this.общиеToolStripMenuItem.Name = "общиеToolStripMenuItem";
-            this.общиеToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.общиеToolStripMenuItem.Text = "Общие";
             // 
             // Form1
             // 

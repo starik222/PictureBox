@@ -45,7 +45,8 @@ namespace PictureBox
         delegate void ProgressHandler(int chisl);
         public string[] str;
 
-
+        public bool DisableLoadTags;
+        public bool NoSaveCache;
         public string Con_str()
         {
             Con_string c_str = new Con_string();
@@ -143,7 +144,23 @@ namespace PictureBox
 
 
         }
-
+        public void reloadDataFromDB()
+        {
+            if (!DisableLoadTags)
+            {
+                this.tagsTableAdapter.Fill(this.pBDataSet.tags);
+            }
+            else
+            {
+                pBDataSet.tags.Clear();
+                pBDataSet.tags.Dispose();
+                GC.Collect();
+            }
+            if (!NoSaveCache)
+            {
+                this.archiveTableAdapter.Fill(this.pBDataSet.archive);
+            }
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             if(Con_str()!="error")
@@ -155,14 +172,14 @@ namespace PictureBox
             // TODO: данная строка кода позволяет загрузить данные в таблицу "pBDataSet.tags". При необходимости она может быть перемещена или удалена.
             try
             {
-                this.tagsTableAdapter.Fill(this.pBDataSet.tags);
-                // TODO: данная строка кода позволяет загрузить данные в таблицу "pBDataSet.archive". При необходимости она может быть перемещена или удалена.
-                this.archiveTableAdapter.Fill(this.pBDataSet.archive);
+
                 RegistryKey myreg;
                 // RunExe("1");
                 myreg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\PictureBox\\Setting");
                 if (myreg != null)
                 {
+                    DisableLoadTags = Convert.ToBoolean(myreg.GetValue("DisableLoadTags", false));
+                    NoSaveCache = Convert.ToBoolean(myreg.GetValue("NoSaveCache", false));
                     string all_path = (string)myreg.GetValue("PathPict");
                     char[] charSeparators = new char[] { '|' };
                     string[] mass_path;
@@ -172,8 +189,16 @@ namespace PictureBox
                         listBox3.Items.Add(mass_path[i]);
                     }
                 }
+                if (!DisableLoadTags)
+                {
+                    this.tagsTableAdapter.Fill(this.pBDataSet.tags);
+                }
+                this.archiveTableAdapter.Fill(this.pBDataSet.archive);
                 label9.Text = Convert.ToString(archiveTableAdapter.GetCount());
-
+                /*if (NoSaveCache)
+                {
+                    this.archiveTableAdapter.Dispose();
+                }*/
             }
             catch (Exception ex)
             {
@@ -450,17 +475,66 @@ namespace PictureBox
                 int pp = str[listBox1.SelectedIndex].LastIndexOf("'");
                 if (pp == (-1))
                 {
-                    row = pBDataSet.archive.Select("Pic_Path='" + str[listBox1.SelectedIndex] + "'");
-                    if (row.Length != 0)
+                    if (!DisableLoadTags)
                     {
-                        row1 = pBDataSet.tags.Select("Kod_Arc=" + row[0].ItemArray[0]);
-                        for (int i = 0; i < row1.Length; i++)
+                        row = pBDataSet.archive.Select("Pic_Path='" + str[listBox1.SelectedIndex] + "'");
+                        if (row.Length != 0)
                         {
-                            listBox2.Items.Add(row1[i].ItemArray[2]);
+                            row1 = pBDataSet.tags.Select("Kod_Arc=" + row[0].ItemArray[0]);
+                            for (int i = 0; i < row1.Length; i++)
+                            {
+                                listBox2.Items.Add(row1[i].ItemArray[2]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string[] aot = GetArrayOfTags(Path.GetFileName(str[listBox1.SelectedIndex]));
+                        for (int i = 0; i < aot.Length; i++)
+                        {
+                            listBox2.Items.Add(aot[i]);
                         }
                     }
                 }
             }
+        }
+        private string[] GetArrayOfTags(string name)
+        {
+            // tagsTableAdapter.Delete();
+            //  pBDataSet.tags.Rows.Clear();
+            // tagsTableAdapter.Update(pBDataSet.tags);
+            int prov;
+            char[] charSeparators = new char[] { ' ' };
+            string filen;
+            int id_pic = 0;
+            string[] ttt;
+            DataTable table;
+            string t1 = "Konachan.com";
+            string t2 = "-";
+            int prog;
+            filen = name;
+            List<string> aot = new List<string>();
+            filen = filen.Remove(filen.Length - 4);
+                //   while (posl != (-1))
+                //  {
+                //      posl = filen.LastIndexOf(" ", pos);
+            ttt = filen.Split(charSeparators);
+
+            for (int j = 0; j < ttt.Length; j++)
+            {
+                if ((ttt[j] != t1) && (ttt[j] != t2))
+                {
+                    try
+                    {
+                        prov = Convert.ToInt32(ttt[j]);
+                    }
+                    catch (FormatException)
+                    {
+                        aot.Add(ttt[j]);
+                    }
+                }
+            }
+            return aot.ToArray();
         }
         private void SetTags()
         {
@@ -901,6 +975,22 @@ namespace PictureBox
         private void webSearchKonachanToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("WebSearchKonachan.exe");
+        }
+
+        private void общиеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form_options f_o = new Form_options();
+            f_o.Owner = this;
+            f_o.ShowDialog();
+            RegistryKey myreg;
+            myreg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\PictureBox\\Setting", true);
+            if (myreg == null)
+            {
+                myreg = Registry.CurrentUser.CreateSubKey("SOFTWARE\\PictureBox\\Setting");
+            }
+            DisableLoadTags = Convert.ToBoolean(myreg.GetValue("DisableLoadTags", false));
+            NoSaveCache = Convert.ToBoolean(myreg.GetValue("NoSaveCache", false));
+            reloadDataFromDB();
         }
     
 
