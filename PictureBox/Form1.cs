@@ -195,10 +195,12 @@ namespace PictureBox
                 }
                 this.archiveTableAdapter.Fill(this.pBDataSet.archive);
                 label9.Text = Convert.ToString(archiveTableAdapter.GetCount());
-                /*if (NoSaveCache)
+                if (NoSaveCache)
                 {
-                    this.archiveTableAdapter.Dispose();
-                }*/
+                    pBDataSet.archive.Clear();
+                    pBDataSet.archive.Dispose();
+                    GC.Collect();
+                }
             }
             catch (Exception ex)
             {
@@ -341,8 +343,13 @@ namespace PictureBox
 
         public void button4_Click(object sender, EventArgs e)
         {
+            if (NoSaveCache)
+            {
+                this.archiveTableAdapter.Fill(this.pBDataSet.archive);
+            }
+            bool filter1 = true, filter2 = false;
             listBox1.Items.Clear();
-            DataRow[] dr;
+            DataRow[] dr = null;
             string expr, temp;
             expr = "";
             char[] razdelen = new char[] { ' ' };
@@ -402,13 +409,23 @@ namespace PictureBox
                 }
                 else
                 {
+                    if (mass[0] == "")
+                        filter1 = false;
                     expr = "(Pic_name LIKE '*" + mass[0] + "*'";
                 }
                 expr = expr + ")";
                 if (textBox5.Text != "")
                 {
+                    filter2 = true;
                     string[] arr_iskl = textBox5.Text.Split(razdelen);
-                    expr += " AND (";
+                    if (!filter1)
+                    {
+                        expr = "(";
+                    }
+                    else
+                    {
+                        expr += " AND (";
+                    }
                     for (int k = 0; k < arr_iskl.Length; k++)
                     {
                         expr += " Pic_name not LIKE '*" + arr_iskl[k] + "*'";
@@ -424,7 +441,14 @@ namespace PictureBox
                 }
                 if (radioButton3.Checked)
                 {
-                    expr = expr + " AND (Pic_num>=" + textBox3.Text + " AND Pic_num<=" + textBox4.Text + ")";
+                    if (filter1 || filter2)
+                    {
+                        expr = expr + " AND (Pic_num>=" + textBox3.Text + " AND Pic_num<=" + textBox4.Text + ")";
+                    }
+                    else
+                    {
+                        expr = "Pic_num>=" + textBox3.Text + " AND Pic_num<=" + textBox4.Text;
+                    }
                 }
                 // 
 
@@ -436,7 +460,14 @@ namespace PictureBox
             {
                 expr = "Pic_num>="+textBox3.Text+" AND Pic_num<="+textBox4.Text;
             }
+            if (!(filter1 || filter2) && radioButton1.Checked)
+            {
+                dr = pBDataSet.archive.Select();
+            }
+            else
+            {
                 dr = pBDataSet.archive.Select(expr);
+            }
                 str = new string[dr.Length];
                 for (int i = 0; i < dr.Length; i++)
                 {
@@ -445,7 +476,12 @@ namespace PictureBox
                     str[i] = (string)dr[i].ItemArray[1];
                 }
                 label3.Text = "Найдено изображений:" + listBox1.Items.Count.ToString();
-
+                if (NoSaveCache)
+                {
+                    pBDataSet.archive.Clear();
+                    pBDataSet.archive.Dispose();
+                    GC.Collect();
+                }
         }
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
